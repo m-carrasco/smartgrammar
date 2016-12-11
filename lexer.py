@@ -26,20 +26,40 @@ tokens = (
 # Regular expression rules for simple tokens
 t_CREATURE    = r'CREATURE'
 t_SCRIPT   = r'SCRIPT'
-t_COLON =  r':'
 t_ENTRY = r'ENTRY'
 t_GUID = r'GUID'
+t_DO = r'DO'
+t_AT = r'AT'
+
 t_EQUAL = r'='
+t_COLON =  r':'
+
 t_ID = r'eventId'
 t_LINK = r'eventlink'
 t_EVENT_PHASE_MASK = r'eventPhaseMask'
 t_EVENT_FLAGS = r'eventFlags'
 t_EVENT_CHANCE = r'eventChance'
-t_DO = r'DO'
-t_SPELL_ID = r'spellId'
-t_CAST_FLAGS = r'castFlags'
-t_CREATURE_ENTRY = r'creatureEntry'
-t_MAX_DIST = r'maxDist'
+
+# we could write event parameters like this
+#t_SPELL_ID = r'spellId'
+#t_CAST_FLAGS = r'castFlags'
+#t_CREATURE_ENTRY = r'creatureEntry'
+#t_MAX_DIST = r'maxDist'
+
+# but for simplicity now we will just use param1, param2, etc.
+t_PARAM_1 = r'param1'
+t_PARAM_2 = r'param2'
+t_PARAM_3 = r'param3'
+t_PARAM_4 = r'param4'
+
+t_SMART_EVENT_FLAG_NOT_REPEATABLE = r'SMART_EVENT_FLAG_NOT_REPEATABLE'
+t_SMART_EVENT_FLAG_DIFFICULTY_0 = r'SMART_EVENT_FLAG_DIFFICULTY_0'
+t_SMART_EVENT_FLAG_DIFFICULTY_1 = r'SMART_EVENT_FLAG_DIFFICULTY_1'
+t_SMART_EVENT_FLAG_DIFFICULTY_2 = r'SMART_EVENT_FLAG_DIFFICULTY_2'
+t_SMART_EVENT_FLAG_DIFFICULTY_3 = r'SMART_EVENT_FLAG_DIFFICULTY_3'
+t_SMART_EVENT_FLAG_DEBUG_ONLY = r'SMART_EVENT_FLAG_DEBUG_ONLY'
+t_SMART_EVENT_FLAG_DONT_RESET = r'SMART_EVENT_FLAG_DONT_RESET'
+t_SMART_EVENT_FLAG_WHILE_CHARMED = r'SMART_EVENT_FLAG_WHILE_CHARMED'
 
 # SMART_EVENTS taken from TC source
 t_SMART_EVENT_UPDATE_IC=r'SMART_EVENT_UPDATE_IC'
@@ -245,10 +265,10 @@ def t_NUMBER(t):
     #numbers with comma or numbers with no comma
     if token.value.isdigit():
         number_value = int(token.value)
+        number_type = "int"
     else:
         number_value = float(token.value)
-        
-    number_type = "number"
+        number_type = "float"
     token.value = {"value": number_value, "type": number_type}
     return token
 
@@ -268,3 +288,9 @@ def t_error(t):
 
 # Build the lexer
 lexer = lex.lex()
+
+# this function returns tokens from data input as a list
+def apply(data):
+  # Give the lexer some input
+  lexer.input(data)
+  return list(lexer)
