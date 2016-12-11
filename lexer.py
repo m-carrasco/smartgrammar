@@ -21,8 +21,6 @@ tokens = (
   'CAST_FLAGS', # castFlags
   'CREATURE_ENTRY', # creatureEntry
   'MAX_DIST', # maxDist
-  'SMART_EVENT', # SMART_EVENT_something
-  'SMART_ACTION', # SMART_ACTION_something
   'PARAM_1',
   'PARAM_2',
   'PARAM_3',
