@@ -20,6 +20,7 @@ from lexer import tokens
 # eventparam : LINK EQUAL NUMBER
 # eventparam : EVENT_PHASE_MASK EQUAL NUMBER
 # eventparam : EVENT_CHANCE EQUAL NUMBER
+# eventparam : EVENT_FLAGS EQUAL NUMBER
 
 # actionconf : actionparam actionconf
 # actionconf : 
@@ -296,6 +297,10 @@ def p_event_param_3(p):
   
 def p_event_param_4(p):
   'eventparam : EVENT_CHANCE EQUAL NUMBER'
+  pass
+
+def p_event_param_5(p):
+  'eventparam : EVENT_FLAGS EQUAL NUMBER'
   pass
 
 def p_action_conf_1(p):
