@@ -30,12 +30,13 @@ class Action(Expression):
         self.actionConf = actionConf
 
 class Target(Expression):
-    def __init__(self, type, param1=None, param2=None, param3=None, paramX=None, paramY=None, paramZ=None, paramO=None):
-        self.type = type
-        self.param1 = param1
-        self.param2 = param2
-        self.param3 = param3
-        self.paramX = paramX
-        self.paramY = paramY
-        self.paramZ = paramZ
-        self.paramO = paramO
+    def __init__(self, targetType, targetConf):
+        self.targetType = targetType
+        self.targetConf = targetConf
+        #self.param1 = param1
+        #self.param2 = param2
+        #self.param3 = param3
+        #self.paramX = paramX
+        #self.paramY = paramY
+        #self.paramZ = paramZ
+        #self.paramO = paramO
