@@ -25,6 +25,8 @@ tokens = (
   'PARAM_2',
   'PARAM_3',
   'PARAM_4',
+  'PARAM_5',
+  'PARAM_6',
   'PARAM_X',
   'PARAM_Y',
   'PARAM_Z', 
@@ -303,6 +305,8 @@ t_PARAM_1 = r'param1'
 t_PARAM_2 = r'param2'
 t_PARAM_3 = r'param3'
 t_PARAM_4 = r'param4'
+t_PARAM_5 = r'param5'
+t_PARAM_6 = r'param6'
 
 t_PARAM_X = r'paramX'
 t_PARAM_Y = r'paramY'

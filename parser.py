@@ -21,6 +21,10 @@ from lexer import tokens
 # eventparam : EVENT_PHASE_MASK EQUAL NUMBER
 # eventparam : EVENT_CHANCE EQUAL NUMBER
 # eventparam : EVENT_FLAGS EQUAL NUMBER
+# eventparam : PARAM_1 EQUAL NUMBER
+# eventparam : PARAM_2 EQUAL NUMBER
+# eventparam : PARAM_3 EQUAL NUMBER
+# eventparam : PARAM_4 EQUAL NUMBER
 
 # actionconf : actionparam actionconf
 # actionconf : 
@@ -28,6 +32,8 @@ from lexer import tokens
 # actionparam : PARAM_2 EQUAL NUMBER
 # actionparam : PARAM_3 EQUAL NUMBER
 # actionparam : PARAM_4 EQUAL NUMBER
+# actionparam : PARAM_5 EQUAL NUMBER
+# actionparam : PARAM_6 EQUAL NUMBER
 
 # targetconf : targetparam targetconf
 # targetconf :
@@ -303,6 +309,22 @@ def p_event_param_5(p):
   'eventparam : EVENT_FLAGS EQUAL NUMBER'
   pass
 
+def p_event_param_6(p):
+  'eventparam : PARAM_1 EQUAL NUMBER'
+  pass
+
+def p_event_param_7(p):
+  'eventparam : PARAM_2 EQUAL NUMBER'
+  pass
+
+def p_event_param_8(p):
+  'eventparam : PARAM_3 EQUAL NUMBER'
+  pass
+
+def p_event_param_9(p):
+  'eventparam : PARAM_4 EQUAL NUMBER'
+  pass
+
 def p_action_conf_1(p):
   'actionconf : actionparam actionconf'
   pass
@@ -326,6 +348,15 @@ def p_action_param_3(p):
 def p_action_param_4(p):
   'actionparam : PARAM_4 EQUAL NUMBER'
   pass
+
+def p_action_param_5(p):
+  'actionparam : PARAM_5 EQUAL NUMBER'
+  pass
+
+def p_action_param_6(p):
+  'actionparam : PARAM_6 EQUAL NUMBER'
+  pass
+
 
 def p_target_conf_1(p):
   'targetconf : targetparam targetconf'
