@@ -1,10 +1,8 @@
-# Yacc example
-
 import ply.yacc as yacc
 
 # Get the token map from the lexer.  This is required.
 from lexer import tokens
-
+from expressions import Script, Event, Action, Target
 # resume of productions
 # remember that newlines, tab and spaces are ignored
 
@@ -47,7 +45,20 @@ from lexer import tokens
 
 def p_script(p):
   'script : CREATURE SCRIPT COLON ENTRY EQUAL NUMBER AT smartevent eventconf DO smartaction actionconf ON smarttarget targetconf'
-  pass
+  # 0           1      2      3     4    5     6      7   8           9      10   11            12     13   14           15 
+  eConf = p[9]
+  eType = p[8]
+
+  aType = p[11]
+  aConf = p[12]
+
+  tType = p[14]
+  tConf = p[15]
+
+  p[0] = Script(entry=p[4], 
+                event=Event(eventType=eType, eventConf=eConf), 
+                action=Action(actionType=aType, actionConf= aConf), 
+                target=Target(targetType=tType, targetConf=tConf))
 
 def p_smart_event(p):
   '''smartevent : SMART_EVENT_UPDATE_IC 
@@ -282,117 +293,136 @@ def p_smart_target(p):
   p[0] = p[1]
 
 def p_event_conf_1(p):
+  # 0            1          2
   'eventconf : eventparam eventconf'
-  pass
+  
+  eConf = p[2] # event parameters parsed up to now - it is bottom up.
+  (paramName, paramValue) = p[1]
+
+  if eConf is None:
+    p[0] = {paramName : paramValue}
+  else:
+    p[0] = p[1][paramName] = paramValue
 
 def p_event_conf_2(p):
   'eventconf : '
-  pass
+  p[0] = None
 
 def p_event_param_1(p):
   'eventparam : ID EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_event_param_2(p):
   'eventparam : LINK EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_event_param_3(p):
   'eventparam : EVENT_PHASE_MASK EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
   
 def p_event_param_4(p):
   'eventparam : EVENT_CHANCE EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_event_param_5(p):
   'eventparam : EVENT_FLAGS EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_event_param_6(p):
   'eventparam : PARAM_1 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_event_param_7(p):
   'eventparam : PARAM_2 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_event_param_8(p):
   'eventparam : PARAM_3 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_event_param_9(p):
   'eventparam : PARAM_4 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_action_conf_1(p):
   'actionconf : actionparam actionconf'
-  pass
+  aConf = p[2] #  parameters parsed up to now - it is bottom up.
+  (paramName, paramValue) = p[1]
+
+  if aConf is None:
+    p[0] = {paramName : paramValue}
+  else:
+    p[0] = p[1][paramName] = paramValue
 
 def p_action_conf_2(p):
   'actionconf : '
-  pass
+  p[0] = None
 
 def p_action_param_1(p):
   'actionparam : PARAM_1 EQUAL NUMBER'
-  pass
+    p[0] = (p[1], p[3]["value"])
 
 def p_action_param_2(p):
   'actionparam : PARAM_2 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_action_param_3(p):
   'actionparam : PARAM_3 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
   
 def p_action_param_4(p):
   'actionparam : PARAM_4 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_action_param_5(p):
   'actionparam : PARAM_5 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_action_param_6(p):
   'actionparam : PARAM_6 EQUAL NUMBER'
-  pass
-
+  p[0] = (p[1], p[3]["value"])
 
 def p_target_conf_1(p):
   'targetconf : targetparam targetconf'
-  pass
+  tConf = p[2] #  parameters parsed up to now - it is bottom up.
+  (paramName, paramValue) = p[1]
+
+  if tConf is None:
+    p[0] = {paramName : paramValue}
+  else:
+    p[0] = p[1][paramName] = paramValue
 
 def p_target_conf_2(p):
   'targetconf : '
-  pass
+  p[0] = None
 
 def p_target_param_1(p):
   'targetparam : PARAM_1 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_target_param_2(p):
   'targetparam : PARAM_2 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
   
 def p_target_param_3(p):
   'targetparam : PARAM_3 EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
   
 def p_target_param_x(p):
   'targetparam : PARAM_X EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 def p_target_param_y(p):
   'targetparam : PARAM_Y EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
   
 def p_target_param_z(p):
   'targetparam : PARAM_Z EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
   
 def p_target_param_o(p):
   'targetparam : PARAM_O EQUAL NUMBER'
-  pass
+  p[0] = (p[1], p[3]["value"])
 
 # Error rule for syntax errors
 def p_error(p):
@@ -400,12 +430,3 @@ def p_error(p):
 
 # Build the parser
 parser = yacc.yacc()
-
-#while True:
-#   try:
-#       s = raw_input('calc > ')
-#   except EOFError:
-#       break
-#   if not s: continue
-#   result = parser.parse(s)
-#   print(result)
