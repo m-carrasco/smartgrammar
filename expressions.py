@@ -15,28 +15,38 @@ class Event(Expression):
     def __init__(self, eventType, eventConf):
         self.eventType = eventType
         self.eventconf = eventConf
-        #self.id = id
-        #self.eventPhase = eventPhase
-        #self.eventChance = eventChance
-        #self.eventLink = link      
-        #self.param1 = param1
-        #self.param2 = param2
-        #self.param3 = param3
-        #self.param4 = param4  
+
+        self.id = eventConf.get("eventId", 0)
+        self.eventPhase = eventConf.get("eventPhase", 0)
+        self.eventChance = eventConf.get("eventChance",100)
+        self.eventLink = eventConf.get("eventLink",0)
+        self.param1 = eventConf.get("param1", 0)
+        self.param2 = eventConf.get("param2", 0)
+        self.param3 = eventConf.get("param3", 0)
+        self.param4 = eventConf.get("param4", 0)  
 
 class Action(Expression):
     def __init__(self, actionType, actionConf):
         self.actionType = actionType
         self.actionConf = actionConf
 
+        self.param1 = actionConf.get("param1", 0)
+        self.param2 = actionConf.get("param2", 0)
+        self.param3 = actionConf.get("param3", 0)
+        self.param4 = actionConf.get("param4", 0)
+        self.param5 = actionConf.get("param5", 0)  
+        self.param6 = actionConf.get("param6", 0)  
+
 class Target(Expression):
     def __init__(self, targetType, targetConf):
         self.targetType = targetType
         self.targetConf = targetConf
-        #self.param1 = param1
-        #self.param2 = param2
-        #self.param3 = param3
-        #self.paramX = paramX
-        #self.paramY = paramY
-        #self.paramZ = paramZ
-        #self.paramO = paramO
+        if targetConf is None:
+            return
+        self.param1 = targetConf.get("param1", 0)
+        self.param2 = targetConf.get("param2", 0)
+        self.param3 = targetConf.get("param3", 0)
+        self.paramX = targetConf.get("paramX", 0)
+        self.paramY = targetConf.get("paramY", 0)  
+        self.paramZ = targetConf.get("paramZ", 0)  
+        self.paramO = targetConf.get("paramO", 0)

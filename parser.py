@@ -298,11 +298,11 @@ def p_event_conf_1(p):
   
   eConf = p[2] # event parameters parsed up to now - it is bottom up.
   (paramName, paramValue) = p[1]
-
   if eConf is None:
     p[0] = {paramName : paramValue}
   else:
-    p[0] = p[1][paramName] = paramValue
+    eConf[paramName] = paramValue
+    p[0] = eConf
 
 def p_event_conf_2(p):
   'eventconf : '
@@ -352,7 +352,8 @@ def p_action_conf_1(p):
   if aConf is None:
     p[0] = {paramName : paramValue}
   else:
-    p[0] = p[1][paramName] = paramValue
+    aConf[paramName] = paramValue
+    p[0] = aConf
 
 def p_action_conf_2(p):
   'actionconf : '
@@ -360,7 +361,7 @@ def p_action_conf_2(p):
 
 def p_action_param_1(p):
   'actionparam : PARAM_1 EQUAL NUMBER'
-    p[0] = (p[1], p[3]["value"])
+  p[0] = (p[1], p[3]["value"])
 
 def p_action_param_2(p):
   'actionparam : PARAM_2 EQUAL NUMBER'
@@ -390,7 +391,8 @@ def p_target_conf_1(p):
   if tConf is None:
     p[0] = {paramName : paramValue}
   else:
-    p[0] = p[1][paramName] = paramValue
+    tConf[paramName] = paramValue
+    p[0] = tConf
 
 def p_target_conf_2(p):
   'targetconf : '
@@ -430,3 +432,7 @@ def p_error(p):
 
 # Build the parser
 parser = yacc.yacc()
+
+def parse(str):
+    """Dado un string, me lo convierte a SVG."""
+    return parser.parse(str)
