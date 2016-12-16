@@ -55,7 +55,7 @@ def p_script(p):
   tType = p[14]
   tConf = p[15]
 
-  p[0] = Script(entry=p[4], 
+  p[0] = Script(entry=p[6]["value"],
                 event=Event(eventType=eType, eventConf=eConf), 
                 action=Action(actionType=aType, actionConf= aConf), 
                 target=Target(targetType=tType, targetConf=tConf))
