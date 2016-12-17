@@ -10,34 +10,16 @@ from .expressions import Script, Event, Action, Target
 
 # eventconf : eventparam eventconf
 # eventconf : 
-# eventparam : ID EQUAL NUMBER
-# eventparam : LINK EQUAL NUMBER
-# eventparam : EVENT_PHASE_MASK EQUAL NUMBER
-# eventparam : EVENT_CHANCE EQUAL NUMBER
-# eventparam : EVENT_FLAGS EQUAL NUMBER
-# eventparam : PARAM_1 EQUAL NUMBER
-# eventparam : PARAM_2 EQUAL NUMBER
-# eventparam : PARAM_3 EQUAL NUMBER
-# eventparam : PARAM_4 EQUAL NUMBER
+# eventparam : ID EQUAL NUMBER | LINK EQUAL NUMBER | EVENT_PHASE_MASK EQUAL NUMBER | EVENT_CHANCE EQUAL NUMBER | EVENT_FLAGS EQUAL NUMBER
+#              | PARAM_1 EQUAL NUMBER | PARAM_2 EQUAL NUMBER | PARAM_3 EQUAL NUMBER | PARAM_4 EQUAL NUMBER
 
 # actionconf : actionparam actionconf
 # actionconf : 
-# actionparam : PARAM_1 EQUAL NUMBER
-# actionparam : PARAM_2 EQUAL NUMBER
-# actionparam : PARAM_3 EQUAL NUMBER
-# actionparam : PARAM_4 EQUAL NUMBER
-# actionparam : PARAM_5 EQUAL NUMBER
-# actionparam : PARAM_6 EQUAL NUMBER
+# actionparam : PARAM_1 EQUAL NUMBER | PARAM_2 EQUAL NUMBER | PARAM_3 EQUAL NUMBER | PARAM_4 EQUAL NUMBER | PARAM_5 EQUAL NUMBER | PARAM_6 EQUAL NUMBER
 
 # targetconf : targetparam targetconf
 # targetconf :
-# targetparam : PARAM_1 EQUAL NUMBER
-# targetparam : PARAM_2 EQUAL NUMBER
-# targetparam : PARAM_3 EQUAL NUMBER
-# targetparam : PARAM_X EQUAL NUMBER
-# targetparam : PARAM_Y EQUAL NUMBER
-# targetparam : PARAM_Z EQUAL NUMBER
-# targetparam : PARAM_O EQUAL NUMBER
+# targetparam : PARAM_1 EQUAL NUMBER | PARAM_2 EQUAL NUMBER | PARAM_3 EQUAL NUMBER | PARAM_X EQUAL NUMBER | PARAM_Y EQUAL NUMBER | PARAM_Z EQUAL NUMBER | PARAM_O EQUAL NUMBER
 
 def p_script(p):
   'script : CREATURE SCRIPT COLON ENTRY EQUAL NUMBER AT SMART_EVENT_TYPE eventconf DO SMART_ACTION_TYPE actionconf ON SMART_TARGET_TYPE targetconf'
