@@ -72,40 +72,16 @@ def p_event_conf_2(p):
   'eventconf : '
   p[0] = None
 
-def p_event_param_1(p):
-  'eventparam : ID EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_event_param_2(p):
-  'eventparam : LINK EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_event_param_3(p):
-  'eventparam : EVENT_PHASE_MASK EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-  
-def p_event_param_4(p):
-  'eventparam : EVENT_CHANCE EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_event_param_5(p):
-  'eventparam : EVENT_FLAGS EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_event_param_6(p):
-  'eventparam : PARAM_1 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_event_param_7(p):
-  'eventparam : PARAM_2 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_event_param_8(p):
-  'eventparam : PARAM_3 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_event_param_9(p):
-  'eventparam : PARAM_4 EQUAL NUMBER'
+def p_event_param(p):
+  '''eventparam : ID EQUAL NUMBER
+              | LINK EQUAL NUMBER
+              | EVENT_PHASE_MASK EQUAL NUMBER
+              | EVENT_CHANCE EQUAL NUMBER
+              | EVENT_FLAGS EQUAL NUMBER
+              | PARAM_1 EQUAL NUMBER
+              | PARAM_2 EQUAL NUMBER
+              | PARAM_3 EQUAL NUMBER
+              | PARAM_4 EQUAL NUMBER'''
   p[0] = (p[1], p[3]["value"])
 
 def p_action_conf_1(p):
@@ -123,28 +99,13 @@ def p_action_conf_2(p):
   'actionconf : '
   p[0] = None
 
-def p_action_param_1(p):
-  'actionparam : PARAM_1 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_action_param_2(p):
-  'actionparam : PARAM_2 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_action_param_3(p):
-  'actionparam : PARAM_3 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-  
-def p_action_param_4(p):
-  'actionparam : PARAM_4 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_action_param_5(p):
-  'actionparam : PARAM_5 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_action_param_6(p):
-  'actionparam : PARAM_6 EQUAL NUMBER'
+def p_action_param(p):
+  '''actionparam : PARAM_1 EQUAL NUMBER
+                 | PARAM_2 EQUAL NUMBER
+                 | PARAM_3 EQUAL NUMBER
+                 | PARAM_4 EQUAL NUMBER
+                 | PARAM_5 EQUAL NUMBER
+                 | PARAM_6 EQUAL NUMBER'''
   p[0] = (p[1], p[3]["value"])
 
 def p_target_conf_1(p):
@@ -162,32 +123,14 @@ def p_target_conf_2(p):
   'targetconf : '
   p[0] = None
 
-def p_target_param_1(p):
-  'targetparam : PARAM_1 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_target_param_2(p):
-  'targetparam : PARAM_2 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-  
-def p_target_param_3(p):
-  'targetparam : PARAM_3 EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-  
-def p_target_param_x(p):
-  'targetparam : PARAM_X EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-
-def p_target_param_y(p):
-  'targetparam : PARAM_Y EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-  
-def p_target_param_z(p):
-  'targetparam : PARAM_Z EQUAL NUMBER'
-  p[0] = (p[1], p[3]["value"])
-  
-def p_target_param_o(p):
-  'targetparam : PARAM_O EQUAL NUMBER'
+def p_target_param(p):
+  '''targetparam : PARAM_1 EQUAL NUMBER
+                 | PARAM_2 EQUAL NUMBER
+                 | PARAM_3 EQUAL NUMBER
+                 | PARAM_X EQUAL NUMBER
+                 | PARAM_Y EQUAL NUMBER
+                 | PARAM_Z EQUAL NUMBER
+                 | PARAM_O EQUAL NUMBER '''
   p[0] = (p[1], p[3]["value"])
 
 # Error rule for syntax errors
