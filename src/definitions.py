@@ -22,6 +22,13 @@ def getActionTypeId(a):
 def getTargetTypeId(t):
 	return targetTypes[t]
 def getCastFlagId(c):
+	if c is "SMARTCAST_NONE":
+		return 0
 	return castFlags[c]
 def getEventFlagId(e):
+	# this is a custom label
+	# it is not part of the tc enums
+	if e is "SMART_EVENT_FLAG_NONE":
+		return 0
+
 	return eventFlags[e]

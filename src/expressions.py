@@ -29,7 +29,7 @@ class Event(Expression):
         self.eventId = eventConf.get("eventId", 0)
         self.eventPhase = eventConf.get("eventPhase", 0)
         self.eventChance = eventConf.get("eventChance",100)
-        self.eventFlags = eventConf.get("eventFlags",0)       
+        self.eventFlags = eventConf.get("eventFlags",{"name": 'SMART_EVENT_FLAG_NONE', "value":0})       
         self.eventLink = eventConf.get("eventLink",0)
         self.param1 = eventConf.get("param1", 0)
         self.param2 = eventConf.get("param2", 0)
