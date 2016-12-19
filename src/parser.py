@@ -3,117 +3,75 @@ import ply.yacc as yacc
 # Get the token map from the lexer.  This is required.
 from .lexer import tokens
 from .expressions import Script, Event, Action, Target
+
 # resume of productions
 # remember that newlines, tab and spaces are ignored
 
-# script : CREATURE SCRIPT COLON ENTRY EQUAL NUMBER AT SMART_EVENT_TYPE eventconf DO SMART_ACTION_TYPE actionconf ON SMART_TARGET_TYPE targetconf
+# initial : CREATURE SCRIPT COLON ENTRY EQUAL NUMBER script
 
-# eventconf : eventparam eventconf
-# eventconf : 
-# eventparam : ID EQUAL NUMBER | LINK EQUAL NUMBER | EVENT_PHASE_MASK EQUAL NUMBER | EVENT_CHANCE EQUAL NUMBER | EVENT_FLAGS EQUAL NUMBER
-#              | PARAM_1 EQUAL NUMBER | PARAM_2 EQUAL NUMBER | PARAM_3 EQUAL NUMBER | PARAM_4 EQUAL NUMBER
+# script : AT SMART_EVENT_TYPE params DO SMART_ACTION_TYPE params ON SMART_TARGET_TYPE params script | lambda
 
-# actionconf : actionparam actionconf
-# actionconf : 
-# actionparam : PARAM_1 EQUAL NUMBER | PARAM_2 EQUAL NUMBER | PARAM_3 EQUAL NUMBER | PARAM_4 EQUAL NUMBER | PARAM_5 EQUAL NUMBER | PARAM_6 EQUAL NUMBER
+# theses productions generate a dictionary that is indexed by the string name of a parameter
+# params : PARAM_NAME EQUAL value params | lambda
 
-# targetconf : targetparam targetconf
-# targetconf :
-# targetparam : PARAM_1 EQUAL NUMBER | PARAM_2 EQUAL NUMBER | PARAM_3 EQUAL NUMBER | PARAM_X EQUAL NUMBER | PARAM_Y EQUAL NUMBER | PARAM_Z EQUAL NUMBER | PARAM_O EQUAL NUMBER
+# value generates a list.
+# value : val PIPE value | val
+# val : NUMBER | SMART_EVENT_FLAG | SMARTCAST_FLAG
 
-def p_script(p):
-  'script : CREATURE SCRIPT COLON ENTRY EQUAL NUMBER AT SMART_EVENT_TYPE eventconf DO SMART_ACTION_TYPE actionconf ON SMART_TARGET_TYPE targetconf'
-  # 0           1      2      3     4    5     6      7   8           9      10   11            12     13   14           15 
-  eConf = p[9]
-  eType = p[8]
+def p_initial(p):
+  # 0          1        2      3    4      5      6      7
+  'initial : CREATURE SCRIPT COLON ENTRY EQUAL NUMBER script'
+  scriptList = p[7]
 
-  aType = p[11]
-  aConf = p[12]
+  p[0] = [Script(entry=p[6], event=ev, action=ac, target=ta) for (ev, ac, ta) in scriptList]
 
-  tType = p[14]
-  tConf = p[15]
+def p_script_1(p):
+  # 0        1      2             3     4  5                6      7    8                 9      10
+  'script : AT SMART_EVENT_TYPE params DO SMART_ACTION_TYPE params ON SMART_TARGET_TYPE params script'
+  eConf = p[3]
+  eType = p[2]
 
-  p[0] = Script(entry=p[6]["value"],
-                event=Event(eventType=eType, eventConf=eConf), 
-                action=Action(actionType=aType, actionConf= aConf), 
-                target=Target(targetType=tType, targetConf=tConf))
+  aType = p[5]
+  aConf = p[6]
 
-def p_event_conf_1(p):
-  # 0            1          2
-  'eventconf : eventparam eventconf'
-  
-  eConf = p[2] # event parameters parsed up to now - it is bottom up.
-  (paramName, paramValue) = p[1]
-  if eConf is None:
-    p[0] = {paramName : paramValue}
-  else:
-    eConf[paramName] = paramValue
-    p[0] = eConf
+  tType = p[8]
+  tConf = p[9]
 
-def p_event_conf_2(p):
-  'eventconf : '
-  p[0] = None
+  t = (Event(eventType=eType, eventConf=eConf), Action(actionType=aType, actionConf= aConf), Target(targetType=tType, targetConf=tConf))
+  p[10].append(t)
+  p[0] = p[10]
 
-def p_event_param(p):
-  '''eventparam : ID EQUAL NUMBER
-              | LINK EQUAL NUMBER
-              | EVENT_PHASE_MASK EQUAL NUMBER
-              | EVENT_CHANCE EQUAL NUMBER
-              | EVENT_FLAGS EQUAL NUMBER
-              | PARAM_1 EQUAL NUMBER
-              | PARAM_2 EQUAL NUMBER
-              | PARAM_3 EQUAL NUMBER
-              | PARAM_4 EQUAL NUMBER'''
-  p[0] = (p[1], p[3]["value"])
+def p_script_2(p):
+  'script : '
+  p[0] = []
 
-def p_action_conf_1(p):
-  'actionconf : actionparam actionconf'
-  aConf = p[2] #  parameters parsed up to now - it is bottom up.
-  (paramName, paramValue) = p[1]
+def p_params_1(p):
+  'params : PARAM_NAME EQUAL value params'
+  # TODO: CHECK IF p[1] IS ALREADY DEFINED!
+  # add new parameter with its value to the dictionary
+  p[4][p[1]] = p[3]
+  p[0] = p[4]
 
-  if aConf is None:
-    p[0] = {paramName : paramValue}
-  else:
-    aConf[paramName] = paramValue
-    p[0] = aConf
+def p_params_2(p):
+  'params : '
+  p[0] = {}
 
-def p_action_conf_2(p):
-  'actionconf : '
-  p[0] = None
+def p_value_1(p):
+  'value : val'
+  p[0] = [p[1]]
 
-def p_action_param(p):
-  '''actionparam : PARAM_1 EQUAL NUMBER
-                 | PARAM_2 EQUAL NUMBER
-                 | PARAM_3 EQUAL NUMBER
-                 | PARAM_4 EQUAL NUMBER
-                 | PARAM_5 EQUAL NUMBER
-                 | PARAM_6 EQUAL NUMBER'''
-  p[0] = (p[1], p[3]["value"])
+def p_value_2(p):
+  'value : val PIPE value'
 
-def p_target_conf_1(p):
-  'targetconf : targetparam targetconf'
-  tConf = p[2] #  parameters parsed up to now - it is bottom up.
-  (paramName, paramValue) = p[1]
+  lValue = p[3]
+  lValue.append(p[1])
+  p[0] = lValue
 
-  if tConf is None:
-    p[0] = {paramName : paramValue}
-  else:
-    tConf[paramName] = paramValue
-    p[0] = tConf
-
-def p_target_conf_2(p):
-  'targetconf : '
-  p[0] = None
-
-def p_target_param(p):
-  '''targetparam : PARAM_1 EQUAL NUMBER
-                 | PARAM_2 EQUAL NUMBER
-                 | PARAM_3 EQUAL NUMBER
-                 | PARAM_X EQUAL NUMBER
-                 | PARAM_Y EQUAL NUMBER
-                 | PARAM_Z EQUAL NUMBER
-                 | PARAM_O EQUAL NUMBER '''
-  p[0] = (p[1], p[3]["value"])
+def p_val(p):
+  '''val : NUMBER
+         | SMART_EVENT_FLAG
+         | SMARTCAST_FLAG'''
+  p[0] = p[1]
 
 # Error rule for syntax errors
 def p_error(p):

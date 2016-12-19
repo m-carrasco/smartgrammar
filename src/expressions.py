@@ -1,3 +1,9 @@
+from collections import namedtuple
+
+Number = namedtuple('Number', 'value type')
+EventFlag = namedtuple('EventFlag', 'name id')
+CastFlag = namedtuple('CastFlag', 'name id')
+
 # Clase abstracta
 class Expression(object):
     def evaluate(self):
@@ -26,15 +32,15 @@ class Event(Expression):
         self.eventType = eventType
         self.eventconf = eventConf
 
-        self.eventId = eventConf.get("eventId", 0)
-        self.eventPhase = eventConf.get("eventPhase", 0)
-        self.eventChance = eventConf.get("eventChance",100)
-        self.eventFlags = eventConf.get("eventFlags",{"name": 'SMART_EVENT_FLAG_NONE', "value":0})       
-        self.eventLink = eventConf.get("eventLink",0)
-        self.param1 = eventConf.get("param1", 0)
-        self.param2 = eventConf.get("param2", 0)
-        self.param3 = eventConf.get("param3", 0)
-        self.param4 = eventConf.get("param4", 0)  
+        self.eventId = eventConf.get("eventId", [Number(0,'int')])
+        self.eventPhase = eventConf.get("eventPhase", [Number(0,'int')])
+        self.eventChance = eventConf.get("eventChance",[Number(100,'int')])
+        self.eventFlags = eventConf.get("eventFlags",[EventFlag('SMART_EVENT_FLAG_NONE', 0)])       
+        self.eventLink = eventConf.get("eventLink",[Number(0,'int')])
+        self.param1 = eventConf.get("param1", [Number(0,'int')])
+        self.param2 = eventConf.get("param2", [Number(0,'int')])
+        self.param3 = eventConf.get("param3", [Number(0,'int')])
+        self.param4 = eventConf.get("param4", [Number(0,'int')])  
 
     def __str__(self):
         cadena = "Event:"
@@ -54,12 +60,12 @@ class Action(Expression):
         self.actionType = actionType
         self.actionConf = actionConf
 
-        self.param1 = actionConf.get("param1", 0)
-        self.param2 = actionConf.get("param2", 0)
-        self.param3 = actionConf.get("param3", 0)
-        self.param4 = actionConf.get("param4", 0)
-        self.param5 = actionConf.get("param5", 0)  
-        self.param6 = actionConf.get("param6", 0)  
+        self.param1 = actionConf.get("param1", [Number(0,'int')])
+        self.param2 = actionConf.get("param2", [Number(0,'int')])
+        self.param3 = actionConf.get("param3", [Number(0,'int')])
+        self.param4 = actionConf.get("param4", [Number(0,'int')])
+        self.param5 = actionConf.get("param5", [Number(0,'int')])  
+        self.param6 = actionConf.get("param6", [Number(0,'int')])  
 
     def __str__(self):
         cadena = "Action:"
@@ -80,13 +86,13 @@ class Target(Expression):
         if targetConf is None:
             targetConf = {}
 
-        self.param1 = targetConf.get("param1", 0)
-        self.param2 = targetConf.get("param2", 0)
-        self.param3 = targetConf.get("param3", 0)
-        self.paramX = targetConf.get("paramX", 0)
-        self.paramY = targetConf.get("paramY", 0)  
-        self.paramZ = targetConf.get("paramZ", 0)  
-        self.paramO = targetConf.get("paramO", 0)
+        self.param1 = targetConf.get("param1", [Number(0,'int')])
+        self.param2 = targetConf.get("param2", [Number(0,'int')])
+        self.param3 = targetConf.get("param3", [Number(0,'int')])
+        self.paramX = targetConf.get("paramX", [Number(0,'int')])
+        self.paramY = targetConf.get("paramY", [Number(0,'int')])  
+        self.paramZ = targetConf.get("paramZ", [Number(0,'int')])  
+        self.paramO = targetConf.get("paramO", [Number(0,'int')])
 
     def __str__(self):
         cadena = "Target:"
