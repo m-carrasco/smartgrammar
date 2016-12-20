@@ -44,7 +44,7 @@ class Event(Expression):
 
     def __str__(self):
         cadena = "Event:"
-        cadena += "\n  eventId: " + str(self.id)
+        cadena += "\n  eventId: " + str(self.eventId)
         cadena += "\n  eventType: " + str(self.eventType)
         cadena += "\n  eventPhase: " + str(self.eventPhase)
         cadena += "\n  eventChance: " + str(self.eventChance)

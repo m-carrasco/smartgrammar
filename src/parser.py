@@ -38,7 +38,7 @@ def p_script_1(p):
   tConf = p[9]
 
   t = (Event(eventType=eType, eventConf=eConf), Action(actionType=aType, actionConf= aConf), Target(targetType=tType, targetConf=tConf))
-  p[10].append(t)
+  p[10].insert(0,t)
   p[0] = p[10]
 
 def p_script_2(p):
