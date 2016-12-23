@@ -63,7 +63,7 @@ def p_params_1(p):
 
   lParams.insert(0, p[1])
   dParams[p[1]] = p[3]
-  
+
   p[0] = (dParams, lParams)
 
 def p_params_2(p):
