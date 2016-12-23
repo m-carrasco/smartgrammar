@@ -17,6 +17,12 @@ def isListOfClass(v, p, c):
         if type(e) is not c:
             error_noline("Parameter: " + p + " must be an event flag or more separated by |.")
 
+def orFlags(flags):
+    res = 0
+    for f in flags:
+        res = res | f.id
+    return res
+
 # Clase abstracta
 class Expression(object):
     def evaluate(self):
@@ -39,6 +45,20 @@ class Script(Expression):
         cadena += "\n " + str(self.action)
         cadena += "\n " + str(self.target)
         return cadena 
+
+    def toSQL(self):
+        #                        1          2           3    4       5        6                   7              8               9            10              11          12               13          14              15            16               17               18          19      20                   21            22           23         24           25        26     27           28    
+        sql = """INSERT INTO (entryorguid, source_type, id, link, event_type, event_phase_mask, event_chance, event_flags, event_param1, event_param2, event_param3, event_param4, action_type, action_param1, action_param2, action_param3, action_param4, action_param5,  action_param6, target_type, target_param1, target_param2, target_param3, target_x, target_y, target_z, target_0, comment)
+                 VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {},{},{}, {}, {}, {}, {}, {}, {}, {},{}, {}, {}, {}, {}, {}, {}, {}, {});  
+              """
+
+        e = self.event
+        a = self.action
+        t = self.target
+         
+        #         (entryorguid, source_type,           id,          link,                       event_type,          event_phase_mask,       event_chance,              event_flags,            event_param1,         event_param2,         event_param3,          event_param4,       action_type,           action_param1,         action_param2,        action_param3,           action_param4,  action_param5          action_param6,               target_type,         target_param1,       target_param2,         target_param3,         target_x,       target_y,        target_z,            target_0,    comment)
+        sql = sql.format(self.entry.value,     0,        e.eventId[0].value, e.eventLink[0].value, e.eventType['value'],  e.eventPhase[0].value,      e.eventChance[0].value,   orFlags(e.eventFlags), e.params[0][0].value, e.params[1][0].value, e.params[2][0].value, e.params[3][0].value,  a.actionType['value'], a.params[0][0].value, a.params[1][0].value, a.params[2][0].value, a.params[3][0].value, a.params[4][0].value, a.params[5][0].value, t.targetType['value'], t.params[0][0].value, t.params[1][0].value, t.params[2][0].value, t.paramX[0].value, t.paramY[0].value,t.paramZ[0].value,t.paramO[0].value, '') 
+        return sql
 
 class Event(Expression):
     def __init__(self, eventType, eventConf):
