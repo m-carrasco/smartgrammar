@@ -7,15 +7,15 @@ args = p.parse_args()
 
 f = open(args.inputFile)
 try:
-	lines = f.readlines()
-	# find a nicer way to read the entire file
-	content = "".join(lines)
-	
-	content = parser.parse(content)
+    lines = f.readlines()
+    # find a nicer way to read the entire file
+    content = "".join(lines)
 
-	sqls = map(lambda s: s.toSQL(), content)
-	for sql in sqls:
-		print(sql + '\n')
+    content = parser.parse(content)
+
+    sqls = map(lambda s: s.toSQL(), content)
+    for sql in sqls:
+        print(sql + '\n')
 
 finally:
     f.close()
