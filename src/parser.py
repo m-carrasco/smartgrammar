@@ -18,6 +18,11 @@ from .expressions import Script, Event, Action, Target
 # value : val PIPE value | val
 # val : NUMBER | SMART_EVENT_FLAG | SMARTCAST_FLAG
 
+# handling custom errors
+
+def error(line,msg):
+  raise Exception("Line:%d Error: %s" % (line,msg))
+
 def p_initial(p):
   # 0          1        2      3    4      5      6      7
   'initial : CREATURE SCRIPT COLON ENTRY EQUAL NUMBER script'
@@ -47,14 +52,23 @@ def p_script_2(p):
 
 def p_params_1(p):
   'params : PARAM_NAME EQUAL value params'
-  # TODO: CHECK IF p[1] IS ALREADY DEFINED!
   # add new parameter with its value to the dictionary
-  p[4][p[1]] = p[3]
-  p[0] = p[4]
+
+  # dParams are the map for paramName -> paramValue
+  # lParams is the order of paramNames
+  (dParams, lParams) = p[4]
+
+  if p[1] in dParams.keys():
+    error(p.lineno(1), "Parameter defined twice or more.")
+
+  lParams.insert(0, p[1])
+  dParams[p[1]] = p[3]
+  
+  p[0] = (dParams, lParams)
 
 def p_params_2(p):
   'params : '
-  p[0] = {}
+  p[0] = ({},[])
 
 def p_value_1(p):
   'value : val'
@@ -73,9 +87,14 @@ def p_val(p):
          | SMARTCAST_FLAG'''
   p[0] = p[1]
 
-# Error rule for syntax errors
-def p_error(p):
-    print("Syntax error in input!")
+def p_error(token):
+  message = "Syntax error"
+  if token is not None:
+    message += "\ntype:" + token.type
+    message += "\nvalue:" + str(token.value)
+    message += "\nline:" + str(token.lineno)
+    message += "\nposition:" + str(token.lexpos)
+  raise Exception(message)
 
 # Build the parser
 parser = yacc.yacc()

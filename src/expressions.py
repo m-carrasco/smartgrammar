@@ -4,6 +4,19 @@ Number = namedtuple('Number', 'value type')
 EventFlag = namedtuple('EventFlag', 'name id')
 CastFlag = namedtuple('CastFlag', 'name id')
 
+def error_noline(msg):
+    raise Exception("Error: %s" % (msg))
+
+def isNumber(v, p):
+    if len(v) is 1 and type(v[0]) is Number:
+        return
+    error_noline("Parameter: " + p + " must be just one number.")
+
+def isListOfClass(v, p, c):
+    for e in v:
+        if type(e) is not c:
+            error_noline("Parameter: " + p + " must be an event flag or more separated by |.")
+
 # Clase abstracta
 class Expression(object):
     def evaluate(self):
@@ -29,18 +42,38 @@ class Script(Expression):
 
 class Event(Expression):
     def __init__(self, eventType, eventConf):
+        (paramsDict, paramsList) = eventConf
         self.eventType = eventType
         self.eventconf = eventConf
 
-        self.eventId = eventConf.get("eventId", [Number(0,'int')])
-        self.eventPhase = eventConf.get("eventPhase", [Number(0,'int')])
-        self.eventChance = eventConf.get("eventChance",[Number(100,'int')])
-        self.eventFlags = eventConf.get("eventFlags",[EventFlag('SMART_EVENT_FLAG_NONE', 0)])       
-        self.eventLink = eventConf.get("eventLink",[Number(0,'int')])
-        self.param1 = eventConf.get("param1", [Number(0,'int')])
-        self.param2 = eventConf.get("param2", [Number(0,'int')])
-        self.param3 = eventConf.get("param3", [Number(0,'int')])
-        self.param4 = eventConf.get("param4", [Number(0,'int')])  
+        if paramsDict is None:
+            paramsDict = {}
+
+        self.eventId = paramsDict.get("eventId", [Number(0,'int')])
+        self.eventPhase = paramsDict.get("eventPhase", [Number(0,'int')])
+        self.eventChance = paramsDict.get("eventChance",[Number(100,'int')])
+        self.eventFlags = paramsDict.get("eventFlags",[EventFlag('SMART_EVENT_FLAG_NONE', 0)])       
+        self.eventLink = paramsDict.get("eventLink",[Number(0,'int')])
+
+        isNumber(self.eventId, "eventId")
+        isNumber(self.eventPhase, "eventPhase")
+        isNumber(self.eventChance, "eventChance")
+        isNumber(self.eventLink, "eventLink")
+        #isListOfClass(self.eventFlags, "eventFlags", EventFlag)
+
+        # initialize with default values
+        self.params = [[Number(0,'int')], [Number(0,'int')], [Number(0,'int')], [Number(0,'int')]]
+
+        # preconditions: custom parameter name cannot be mixed with param1, param2, param3, param4 names.
+        customParameters = filter(lambda paramName: paramName[0] is '*', paramsList)
+        customParameters = list(customParameters) # we later call len
+
+        if len(customParameters) > 0:
+            for (idx, param) in enumerate(customParameters):
+                self.params[idx] = paramsDict[param]
+        else:
+            for i in range(0, 4):
+                self.params[i] = paramsDict.get("param"+str(i+1), [Number(0,'int')])
 
     def __str__(self):
         cadena = "Event:"
@@ -49,57 +82,80 @@ class Event(Expression):
         cadena += "\n  eventPhase: " + str(self.eventPhase)
         cadena += "\n  eventChance: " + str(self.eventChance)
         cadena += "\n  eventLink: " + str(self.eventLink)
-        cadena += "\n  param1: " + str(self.param1)
-        cadena += "\n  param2: " + str(self.param2)
-        cadena += "\n  param3: " + str(self.param3)
-        cadena += "\n  param4: " + str(self.param4)
+        cadena += "\n  param1: " + str(self.params[0])
+        cadena += "\n  param2: " + str(self.params[1])
+        cadena += "\n  param3: " + str(self.params[2])
+        cadena += "\n  param4: " + str(self.params[3])
         return cadena 
 
 class Action(Expression):
     def __init__(self, actionType, actionConf):
+        (paramsDict, paramsList) = actionConf
         self.actionType = actionType
         self.actionConf = actionConf
 
-        self.param1 = actionConf.get("param1", [Number(0,'int')])
-        self.param2 = actionConf.get("param2", [Number(0,'int')])
-        self.param3 = actionConf.get("param3", [Number(0,'int')])
-        self.param4 = actionConf.get("param4", [Number(0,'int')])
-        self.param5 = actionConf.get("param5", [Number(0,'int')])  
-        self.param6 = actionConf.get("param6", [Number(0,'int')])  
+        if paramsDict is None:
+            paramsDict = {}
+
+        # initialize with default values
+        self.params = [[Number(0,'int')], [Number(0,'int')], [Number(0,'int')], [Number(0,'int')], [Number(0,'int')], [Number(0,'int')]]
+
+        # preconditions: custom parameter name cannot be mixed with param1, param2, param3, param4 names.
+        customParameters = filter(lambda paramName: paramName[0] is '*', paramsList)
+        customParameters = list(customParameters) # we later call len
+
+        if len(customParameters) > 0:
+            for (idx, param) in enumerate(customParameters):
+                self.params[idx] = paramsDict[param]
+        else:
+            for i in range(0, 6):
+                self.params[i] = paramsDict.get("param"+str(i+1), [Number(0,'int')])
 
     def __str__(self):
         cadena = "Action:"
         cadena += "\n  actionType: " + str(self.actionType)
-        cadena += "\n  param1: " + str(self.param1)
-        cadena += "\n  param2: " + str(self.param2)
-        cadena += "\n  param3: " + str(self.param3)
-        cadena += "\n  param4: " + str(self.param4)
-        cadena += "\n  param5: " + str(self.param5)
-        cadena += "\n  param6: " + str(self.param6)
+        cadena += "\n  param1: " + str(self.params[0])
+        cadena += "\n  param2: " + str(self.param[1])
+        cadena += "\n  param3: " + str(self.param[2])
+        cadena += "\n  param4: " + str(self.param[3])
+        cadena += "\n  param5: " + str(self.param[4])
+        cadena += "\n  param6: " + str(self.param[5])
         return cadena 
 
 class Target(Expression):
     def __init__(self, targetType, targetConf):
+        (paramsDict, paramsList) = targetConf
         self.targetType = targetType
         self.targetConf = targetConf
 
-        if targetConf is None:
-            targetConf = {}
+        if paramsDict is None:
+            paramsDict = {}
 
-        self.param1 = targetConf.get("param1", [Number(0,'int')])
-        self.param2 = targetConf.get("param2", [Number(0,'int')])
-        self.param3 = targetConf.get("param3", [Number(0,'int')])
-        self.paramX = targetConf.get("paramX", [Number(0,'int')])
-        self.paramY = targetConf.get("paramY", [Number(0,'int')])  
-        self.paramZ = targetConf.get("paramZ", [Number(0,'int')])  
-        self.paramO = targetConf.get("paramO", [Number(0,'int')])
+        self.paramX = paramsDict.get("paramX", [Number(0,'int')])
+        self.paramY = paramsDict.get("paramY", [Number(0,'int')])  
+        self.paramZ = paramsDict.get("paramZ", [Number(0,'int')])  
+        self.paramO = paramsDict.get("paramO", [Number(0,'int')])
+
+        # initialize with default values
+        self.params = [[Number(0,'int')], [Number(0,'int')], [Number(0,'int')]]
+
+        # preconditions: custom parameter name cannot be mixed with param1, param2, param3, param4 names.
+        customParameters = filter(lambda paramName: paramName[0] is '*', paramsList)
+        customParameters = list(customParameters) # we later call len
+
+        if len(customParameters) > 0:
+            for (idx, param) in enumerate(customParameters):
+                self.params[idx] = paramsDict[param]
+        else:
+            for i in range(0, 3):
+                self.params[i] = paramsDict.get("param"+str(i+1), [Number(0,'int')])
 
     def __str__(self):
         cadena = "Target:"
         cadena += "\n  targetType: " + str(self.targetType)      
-        cadena += "\n  param1: " + str(self.param1)
-        cadena += "\n  param2: " + str(self.param2)
-        cadena += "\n  param3: " + str(self.param3)
+        cadena += "\n  param1: " + str(self.params[0])
+        cadena += "\n  param2: " + str(self.params[1])
+        cadena += "\n  param3: " + str(self.params[2])
         cadena += "\n  paramX: " + str(self.paramX)
         cadena += "\n  paramY: " + str(self.paramY)
         cadena += "\n  paramZ: " + str(self.paramZ)

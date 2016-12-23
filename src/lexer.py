@@ -42,7 +42,7 @@ tokens = (
   'PARAM_NAME'
 )
 
-t_PARAM_NAME= r'eventId|eventLink|eventPhaseMask|eventFlags|eventChance|param1|param2|param3|param4|param5|param6|paramX|paramY|paramZ|paramO'
+t_PARAM_NAME= r'eventId|eventLink|eventPhaseMask|eventFlags|eventChance|param1|param2|param3|param4|param5|param6|paramX|paramY|paramZ|paramO|(\*\w+)'
 
 # Regular expression rules for simple tokens
 t_CREATURE    = r'CREATURE'
