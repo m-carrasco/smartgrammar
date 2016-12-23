@@ -67,15 +67,18 @@ Firstly you can use the default parameters name: param1, param2, param3 and para
 
 For instance SMART_EVENT_ACCEPTED_QUEST just use one parameter so you should only use param1:
 
-```param1=12512
+```
+param1=12512
 ```
 
 Secondly you can define your own parameter names using the character * (asterisk).
 
-```*questId=12512
+```
+*questId=12512
 ```
 
-```*whatever=12512
+```
+*whatever=12512
 ```
 Notice that if you use custom parameter names you must not use the default parameters names for the rest of the event configuration.
 
@@ -98,10 +101,12 @@ For instance SMART_ACTION_SET_FACTION just use one parameter so you should only 
 
 Secondly you can define your own parameter names using the character * (asterisk).
 
-```*factionId=12512
+```
+*factionId=12512
 ```
 
-```*whatever=12512
+```
+*whatever=12512
 ```
 
 Notice that if you use custom parameter names you must not use the default parameters names for the rest of the action configuration.
@@ -130,15 +135,17 @@ Custom parameter names can be defined as you wish but the order is important.
 
 For instance:
 
-```*customName2=12512
-   *abcdefgh=156
+```
+*customName2=12512
+*abcdefgh=156
 ```
 The parser will consider 12512 the value for param1 and 156 for param2. The rest of the parameters will have value 0.
 
 Also keep in mind that if you use the default parameter names you can switch the order
 
-```param4=12512
-   param3=156
+```
+param4=12512
+param3=156
 ```
 param4 will have value 12512 and param3 will have value 156. The rest of the parameters will have value 0.
 
