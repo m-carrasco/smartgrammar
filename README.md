@@ -33,7 +33,7 @@ INSERT INTO smart_scripts (entryorguid, source_type, id, link, event_type, event
 VALUES (11897, 0, 1, 0, 9, 0, 100, 0, 0,8,15000, 25000, 11, 8281, 0, 0, 0, 0,0, 1, 0, 0, 0, 0, 0, 0, 0, '');
 ```
 
-The smartgrammar code is easy to understand rather than the SQL sentences.
+The smartgrammar code is easier to understand than the SQL sentences.
 
 ## Syntax
 
