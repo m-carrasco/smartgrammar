@@ -35,31 +35,33 @@ class Expression(object):
         return self.__str__()
 
 class Script(Expression):
-    def __init__(self, event, action, target, entry):
+    def __init__(self, sourceType, vent, action, target, entry):
         self.entry = entry
         self.event = event
         self.action = action
         self.target = target
+        self.sourceType = sourceType
 
     def __str__(self):
         cadena = "Script:"
-        cadena += "\n Creature Entry: " + str(self.entry)
+        cadena += "\n Source: " + str(self.sourceType)
+        cadena += "\n Entry: " + str(self.entry)
         cadena += "\n " + str(self.event)
         cadena += "\n " + str(self.action)
         cadena += "\n " + str(self.target)
-        return cadena 
+        return cadena
 
     def toSQL(self):
-        #                        1          2           3    4       5        6                   7              8               9            10              11          12               13          14              15            16               17               18          19      20                   21            22           23         24           25        26     27           28    
+        #                        1          2           3    4       5        6                   7              8               9            10              11          12               13          14              15            16               17               18          19      20                   21            22           23         24           25        26     27           28
         sql = """INSERT INTO smart_scripts (entryorguid, source_type, id, link, event_type, event_phase_mask, event_chance, event_flags, event_param1, event_param2, event_param3, event_param4, action_type, action_param1, action_param2, action_param3, action_param4, action_param5,  action_param6, target_type, target_param1, target_param2, target_param3, target_x, target_y, target_z, target_o, comment)
 VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {},{},{}, {}, {}, {}, {}, {}, {}, {},{}, {}, {}, {}, {}, {}, {}, {}, {}, {});"""
 
         e = self.event
         a = self.action
         t = self.target
-         
-        #         (entryorguid, source_type,           id,          link,                       event_type,          event_phase_mask,       event_chance,              event_flags,            event_param1,         event_param2,         event_param3,          event_param4,       action_type,           action_param1,         action_param2,        action_param3,           action_param4,  action_param5          action_param6,               target_type,         target_param1,       target_param2,         target_param3,         target_x,       target_y,        target_z,            target_0,    comment)
-        sql = sql.format(self.entry.value,     0,        e.eventId[0].value, e.eventLink[0].value, e.eventType['value'],  e.eventPhase[0].value,      e.eventChance[0].value,   orFlags(e.eventFlags), e.params[0][0].value, e.params[1][0].value, e.params[2][0].value, e.params[3][0].value,  a.actionType['value'], a.params[0][0].value, a.params[1][0].value, a.params[2][0].value, a.params[3][0].value, a.params[4][0].value, a.params[5][0].value, t.targetType['value'], t.params[0][0].value, t.params[1][0].value, t.params[2][0].value, t.paramX[0].value, t.paramY[0].value,t.paramZ[0].value,t.paramO[0].value, """''""") 
+
+        #                     (entryorguid,               source_type,                         id,          link,                       event_type,          event_phase_mask,       event_chance,              event_flags,            event_param1,         event_param2,         event_param3,          event_param4,       action_type,           action_param1,         action_param2,        action_param3,           action_param4,  action_param5          action_param6,               target_type,         target_param1,       target_param2,         target_param3,         target_x,       target_y,        target_z,            target_0,    comment)
+        sql = sql.format(self.entry.value,     getSourceType(self.sourceType),        e.eventId[0].value, e.eventLink[0].value, e.eventType['value'],  e.eventPhase[0].value,      e.eventChance[0].value,   orFlags(e.eventFlags), e.params[0][0].value, e.params[1][0].value, e.params[2][0].value, e.params[3][0].value,  a.actionType['value'], a.params[0][0].value, a.params[1][0].value, a.params[2][0].value, a.params[3][0].value, a.params[4][0].value, a.params[5][0].value, t.targetType['value'], t.params[0][0].value, t.params[1][0].value, t.params[2][0].value, t.paramX[0].value, t.paramY[0].value,t.paramZ[0].value,t.paramO[0].value, """''""")
         return sql
 
 class Event(Expression):
@@ -74,7 +76,7 @@ class Event(Expression):
         self.eventId = paramsDict.get("eventId", [Number(0,'int')])
         self.eventPhase = paramsDict.get("eventPhase", [Number(0,'int')])
         self.eventChance = paramsDict.get("eventChance",[Number(100,'int')])
-        self.eventFlags = paramsDict.get("eventFlags",[EventFlag('SMART_EVENT_FLAG_NONE', 0)])       
+        self.eventFlags = paramsDict.get("eventFlags",[EventFlag('SMART_EVENT_FLAG_NONE', 0)])
         self.eventLink = paramsDict.get("eventLink",[Number(0,'int')])
 
         isNumber(self.eventId, "eventId")
@@ -108,7 +110,7 @@ class Event(Expression):
         cadena += "\n  param2: " + str(self.params[1])
         cadena += "\n  param3: " + str(self.params[2])
         cadena += "\n  param4: " + str(self.params[3])
-        return cadena 
+        return cadena
 
 class Action(Expression):
     def __init__(self, actionType, actionConf):
@@ -142,7 +144,7 @@ class Action(Expression):
         cadena += "\n  param4: " + str(self.params[3])
         cadena += "\n  param5: " + str(self.params[4])
         cadena += "\n  param6: " + str(self.params[5])
-        return cadena 
+        return cadena
 
 class Target(Expression):
     def __init__(self, targetType, targetConf):
@@ -154,8 +156,8 @@ class Target(Expression):
             paramsDict = {}
 
         self.paramX = paramsDict.get("paramX", [Number(0,'int')])
-        self.paramY = paramsDict.get("paramY", [Number(0,'int')])  
-        self.paramZ = paramsDict.get("paramZ", [Number(0,'int')])  
+        self.paramY = paramsDict.get("paramY", [Number(0,'int')])
+        self.paramZ = paramsDict.get("paramZ", [Number(0,'int')])
         self.paramO = paramsDict.get("paramO", [Number(0,'int')])
 
         # initialize with default values
@@ -174,7 +176,7 @@ class Target(Expression):
 
     def __str__(self):
         cadena = "Target:"
-        cadena += "\n  targetType: " + str(self.targetType)      
+        cadena += "\n  targetType: " + str(self.targetType)
         cadena += "\n  param1: " + str(self.params[0])
         cadena += "\n  param2: " + str(self.params[1])
         cadena += "\n  param3: " + str(self.params[2])
@@ -182,4 +184,4 @@ class Target(Expression):
         cadena += "\n  paramY: " + str(self.paramY)
         cadena += "\n  paramZ: " + str(self.paramZ)
         cadena += "\n  paramO: " + str(self.paramO)
-        return cadena 
+        return cadena

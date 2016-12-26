@@ -7,7 +7,7 @@ from .expressions import Script, Event, Action, Target
 # resume of productions
 # remember that newlines, tab and spaces are ignored
 
-# initial : CREATURE SCRIPT COLON ENTRY EQUAL NUMBER script
+# initial : source SCRIPT COLON ENTRY EQUAL NUMBER script
 
 # script : AT SMART_EVENT_TYPE params DO SMART_ACTION_TYPE params ON SMART_TARGET_TYPE params script | lambda
 
@@ -25,10 +25,10 @@ def error(line,msg):
 
 def p_initial(p):
   # 0          1        2      3    4      5      6      7
-  'initial : CREATURE SCRIPT COLON ENTRY EQUAL NUMBER script'
+  'initial : source SCRIPT COLON ENTRY EQUAL NUMBER script'
   scriptList = p[7]
 
-  p[0] = [Script(entry=p[6], event=ev, action=ac, target=ta) for (ev, ac, ta) in scriptList]
+  p[0] = [Script(sourceType = p[1], entry=p[6], event=ev, action=ac, target=ta) for (ev, ac, ta) in scriptList]
 
 def p_script_1(p):
   # 0        1      2             3     4  5                6      7    8                 9      10

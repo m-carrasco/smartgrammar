@@ -15,6 +15,9 @@ eventFlags = {eventFlagsList[n] : pow(2,n) for n in range(len(eventFlagsList))}
 
 castFlags = {'SMARTCAST_INTERRUPT_PREVIOUS' : 0x01, 'SMARTCAST_TRIGGERED' : 0x02 ,'SMARTCAST_AURA_NOT_PRESENT' : 0x20,'SMARTCAST_COMBAT_MOVE' : 0x40}
 
+sourceTypeList = ['CREATURE', 'GAMEOBJECT', 'AREATRIGGER', 'EVENT', 'GOSSIP', 'QUEST', 'SPELL', 'TRANSPORT', 'INSTANCE', 'TIMED_ACTIONLIST']
+sourceType = {sourceTypeList[n] : n for n in range(len(sourceTypeList))}
+
 def getEventTypeId(e):
 	return eventTypes[e]
 def getActionTypeId(a):
@@ -32,3 +35,5 @@ def getEventFlagId(e):
 		return 0
 
 	return eventFlags[e]
+def getSourceType(s):
+	return sourceType[s]
