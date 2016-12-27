@@ -39,7 +39,10 @@ The smartgrammar code is easier to understand than the SQL sentences.
 
 ### Header
 
-Every script must start with: ```CREATURE SCRIPT: ENTRY=ENTRY_NUMBER``` where ENTRY_NUMBER is the creature entry (an integer).
+Every script must start with: ```SOURCE_TYPE SCRIPT: ENTRYORGUID=ENTRY_NUMBER``` where:
+- SOURCE_TYPE is any of the following strings: CREATURE, GAMEOBJECT, AREATRIGGER, EVENT, GOSSIP, QUEST, SPELL, TRANSPORT, INSTANCE, TIMED_ACTIONLIST
+- ENTRYORGUID is the string ENTRY or GUID.
+- ENTRY_NUMBER is the source entry or guid (both as positive integers).
 
 Then the script requires the specification of event, action and target parameters. 
 
