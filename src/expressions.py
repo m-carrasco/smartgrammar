@@ -1,4 +1,5 @@
 from collections import namedtuple
+from .definitions import getSourceType
 
 Number = namedtuple('Number', 'value type')
 EventFlag = namedtuple('EventFlag', 'name id')
@@ -21,9 +22,9 @@ def orFlags(flags):
     res = 0
     for f in flags:
         if type(f) is Number:
-            res = res | f.value
+            res = res | int(f.value)
         else:
-            res = res | f.id
+            res = res | int(f.id)
     return res
 
 # Clase abstracta

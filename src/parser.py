@@ -2,7 +2,7 @@ import ply.yacc as yacc
 
 # Get the token map from the lexer.  This is required.
 from .lexer import tokens
-from .expressions import Script, Event, Action, Target
+from .expressions import Script, Event, Action, Target, Number
 
 # resume of productions
 # remember that newlines, tab and spaces are ignored
@@ -29,8 +29,8 @@ def p_initial(p):
   scriptList = p[7]
 
   # guids are stored as negative values
-  if p[4] is "GUID":
-      p[6].value = p[6].value * (-1)
+  if p[4] == "GUID":
+    p[6] = Number(p[6].value*(-1), p[6].type)
 
   p[0] = [Script(sourceType = p[1], entry=p[6], event=ev, action=ac, target=ta) for (ev, ac, ta) in scriptList]
 
