@@ -35,7 +35,7 @@ class Expression(object):
         return self.__str__()
 
 class Script(Expression):
-    def __init__(self, sourceType, vent, action, target, entry):
+    def __init__(self, sourceType, event, action, target, entry):
         self.entry = entry
         self.event = event
         self.action = action

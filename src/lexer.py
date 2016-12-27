@@ -7,7 +7,7 @@ tokens = (
   'SOURCE',
   'SCRIPT', # SCRIPT
   'COLON', # :
-  'ENTRY', # entry
+  'ENTRYORGUID', # entryorguid
   'GUID', # guid
   'EQUAL',
   'PIPE',
@@ -47,7 +47,7 @@ t_PARAM_NAME= r'eventId|eventLink|eventPhaseMask|eventFlags|eventChance|param1|p
 # Regular expression rules for simple tokens
 t_SOURCE = r'CREATURE|GAMEOBJECT|AREATRIGGER|EVENT|GOSSIP|QUEST|SPELL|TRANSPORT|INSTANCE|TIMED_ACTIONLIST'
 t_SCRIPT = r'SCRIPT'
-t_ENTRY = r'ENTRY'
+t_ENTRYORGUID = r'ENTRY|GUID'
 t_GUID = r'GUID'
 t_DO = r'DO'
 t_AT = r'AT'

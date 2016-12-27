@@ -7,7 +7,7 @@ from .expressions import Script, Event, Action, Target
 # resume of productions
 # remember that newlines, tab and spaces are ignored
 
-# initial : source SCRIPT COLON ENTRY EQUAL NUMBER script
+# initial : source SCRIPT COLON entryorguid EQUAL NUMBER script
 
 # script : AT SMART_EVENT_TYPE params DO SMART_ACTION_TYPE params ON SMART_TARGET_TYPE params script | lambda
 
@@ -24,9 +24,13 @@ def error(line,msg):
   raise Exception("Line:%d Error: %s" % (line,msg))
 
 def p_initial(p):
-  # 0          1        2      3    4      5      6      7
-  'initial : source SCRIPT COLON ENTRY EQUAL NUMBER script'
+  # 0          1        2      3    4         5      6      7
+  'initial : SOURCE SCRIPT COLON ENTRYORGUID EQUAL NUMBER script'
   scriptList = p[7]
+
+  # guids are stored as negative values
+  if p[4] is "GUID":
+      p[6].value = p[6].value * (-1)
 
   p[0] = [Script(sourceType = p[1], entry=p[6], event=ev, action=ac, target=ta) for (ev, ac, ta) in scriptList]
 
