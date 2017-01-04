@@ -12,8 +12,8 @@ class TestParser(unittest.TestCase):
 
             PHASE(0)
             CHANCE(100)
-            SMART_EVENT_UPDATE_IC(1000,8000,8000,10000)
-            SMART_ACTION_CAST(71270)
+            SMART_EVENT_UPDATE_IC(1000,8000,8000,10000) // this is a comment and should be ignored by the parser
+            SMART_ACTION_CAST(71270) // this is a comment and should be ignored by the parser
             SMART_TARGET_SELF()
         '''
 
