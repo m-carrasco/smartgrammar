@@ -9,7 +9,7 @@ def error_noline(msg):
     raise Exception("Error: %s" % (msg))
 
 def isNumber(v, p):
-    if len(v) is 1 and type(v[0]) is Number:
+    if type(v) is Number:
         return
     error_noline("Parameter: " + p + " must be just one number.")
 
@@ -66,39 +66,31 @@ VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {},{},{}, {}, {}, {}, {}, {}, {}, {},{},
         return sql
 
 class Event(Expression):
+    eventId = 0
     def __init__(self, eventType, eventConf):
-        (paramsDict, paramsList) = eventConf
+        paramsDict= eventConf
         self.eventType = eventType
         self.eventconf = eventConf
 
         if paramsDict is None:
             paramsDict = {}
 
-        self.eventId = paramsDict.get("eventId", [Number(0,'int')])
-        self.eventPhase = paramsDict.get("eventPhase", [Number(0,'int')])
-        self.eventChance = paramsDict.get("eventChance",[Number(100,'int')])
-        self.eventFlags = paramsDict.get("eventFlags",[EventFlag('SMART_EVENT_FLAG_NONE', 0)])
-        self.eventLink = paramsDict.get("eventLink",[Number(0,'int')])
+        self.eventId = Number(paramsDict.get("eventId", Number(0,'int')), 'int')
+        #Event.eventId += 1
+        self.eventPhase = paramsDict.get("PHASE", Number(0,'int'))
+        self.eventChance = paramsDict.get("CHANCES",Number(100,'int'))
+        self.eventFlags = paramsDict.get("FLAGS",Number(0,'int'))
+        self.eventLink = paramsDict.get("LINK",Number(0,'int'))
 
         isNumber(self.eventId, "eventId")
         isNumber(self.eventPhase, "eventPhase")
         isNumber(self.eventChance, "eventChance")
         isNumber(self.eventLink, "eventLink")
-        #isListOfClass(self.eventFlags, "eventFlags", EventFlag)
 
         # initialize with default values
-        self.params = [[Number(0,'int')], [Number(0,'int')], [Number(0,'int')], [Number(0,'int')]]
-
-        # preconditions: custom parameter name cannot be mixed with param1, param2, param3, param4 names.
-        customParameters = filter(lambda paramName: paramName[0] is '*', paramsList)
-        customParameters = list(customParameters) # we later call len
-
-        if len(customParameters) > 0:
-            for (idx, param) in enumerate(customParameters):
-                self.params[idx] = paramsDict[param]
-        else:
-            for i in range(0, 4):
-                self.params[i] = paramsDict.get("param"+str(i+1), [Number(0,'int')])
+        self.params = [Number(0,'int'), Number(0,'int'), Number(0,'int'), Number(0,'int')]
+        for i in range(0, 4):
+            self.params[i] = paramsDict.get("param"+str(i+1), Number(0,'int'))
 
     def __str__(self):
         cadena = "Event:"
@@ -115,7 +107,7 @@ class Event(Expression):
 
 class Action(Expression):
     def __init__(self, actionType, actionConf):
-        (paramsDict, paramsList) = actionConf
+        paramsDict = actionConf
         self.actionType = actionType
         self.actionConf = actionConf
 
@@ -123,18 +115,11 @@ class Action(Expression):
             paramsDict = {}
 
         # initialize with default values
-        self.params = [[Number(0,'int')], [Number(0,'int')], [Number(0,'int')], [Number(0,'int')], [Number(0,'int')], [Number(0,'int')]]
+        self.params = [Number(0,'int'), Number(0,'int'), Number(0,'int'), Number(0,'int'), Number(0,'int'), Number(0,'int')]
 
-        # preconditions: custom parameter name cannot be mixed with param1, param2, param3, param4 names.
-        customParameters = filter(lambda paramName: paramName[0] is '*', paramsList)
-        customParameters = list(customParameters) # we later call len
+        for i in range(0, 6):
+            self.params[i] = paramsDict.get("param"+str(i+1), [Number(0,'int')])
 
-        if len(customParameters) > 0:
-            for (idx, param) in enumerate(customParameters):
-                self.params[idx] = paramsDict[param]
-        else:
-            for i in range(0, 6):
-                self.params[i] = paramsDict.get("param"+str(i+1), [Number(0,'int')])
 
     def __str__(self):
         cadena = "Action:"
@@ -149,31 +134,24 @@ class Action(Expression):
 
 class Target(Expression):
     def __init__(self, targetType, targetConf):
-        (paramsDict, paramsList) = targetConf
+        paramsDict = targetConf
         self.targetType = targetType
         self.targetConf = targetConf
 
         if paramsDict is None:
             paramsDict = {}
 
-        self.paramX = paramsDict.get("paramX", [Number(0,'int')])
-        self.paramY = paramsDict.get("paramY", [Number(0,'int')])
-        self.paramZ = paramsDict.get("paramZ", [Number(0,'int')])
-        self.paramO = paramsDict.get("paramO", [Number(0,'int')])
+        self.paramX = paramsDict.get("param4", Number(0,'int'))
+        self.paramY = paramsDict.get("param5", Number(0,'int'))
+        self.paramZ = paramsDict.get("param6", Number(0,'int'))
+        self.paramO = paramsDict.get("param7", Number(0,'int'))
 
         # initialize with default values
-        self.params = [[Number(0,'int')], [Number(0,'int')], [Number(0,'int')]]
+        self.params = [Number(0,'int'), Number(0,'int'), Number(0,'int')]
 
-        # preconditions: custom parameter name cannot be mixed with param1, param2, param3, param4 names.
-        customParameters = filter(lambda paramName: paramName[0] is '*', paramsList)
-        customParameters = list(customParameters) # we later call len
-
-        if len(customParameters) > 0:
-            for (idx, param) in enumerate(customParameters):
-                self.params[idx] = paramsDict[param]
-        else:
-            for i in range(0, 3):
-                self.params[i] = paramsDict.get("param"+str(i+1), [Number(0,'int')])
+        self.params[0] = paramsDict.get("param1", Number(0,'int'))
+        self.params[1] = paramsDict.get("param2", Number(0,'int'))
+        self.params[2] = paramsDict.get("param3", Number(0,'int'))
 
     def __str__(self):
         cadena = "Target:"
