@@ -1,0 +1,52 @@
+// example file
+// run in this folder python example.in and you will get your SQL
+
+TYPE CREATURE ENTRY 37127 // Ymirjar Frostbinder
+
+// eventId is set automatically and cannot be set by the user
+// the value is assigned incrementally starting from 0
+
+// CHANCE, PHASE, FLAGS, LINK must be set before the EVENT, ACTION and TARGET types.
+// The order between CHANCE,PHASE,FLAGS, LINK doesn't matter.
+
+// EVENT type precedes ACTION type, and ACTION type precedes TARGET type (mandatory)
+
+// eventId=0
+PHASE(0)
+CHANCE(100)
+FLAGS(30) // normal dungeon, heroic dungeon, normal raid, heroic raid
+// you can set custom parameter names, 
+// the order is just considered to set values for param1, param2, param3, param4
+SMART_EVENT_UPDATE_IC(*initialMin=1000, *initialMax=8000, *repeatMin=8000, *repeatMax=10000) 
+// here parameter naming is not used
+SMART_ACTION_CAST(71270) // Arctic Chill
+SMART_TARGET_SELF()
+
+// eventId=1
+CHANCE(100)
+PHASE(0)
+FLAGS(30)
+SMART_EVENT_UPDATE_IC(6000,8000,8000,10000)
+SMART_ACTION_CAST(71274) // Frozen Orb 
+SMART_TARGET_SELF()
+
+// eventId=2
+// PHASE and CHANCE are not written, default values are 0 and 100.
+FLAGS(30)
+SMART_EVENT_UPDATE_IC(6000, 8000, 8000, 10000)
+SMART_ACTION_CAST(*spellId=69929) // Spirit Stream
+SMART_TARGET_HOSTILE_RANDOM_NOT_TOP()
+
+// eventId=3
+FLAGS(30)
+SMART_EVENT_UPDATE_IC(6000,8000,8000, 10000)
+// note that in this case the argument is called *spell previously I used *spellId 
+// The name doesn't matter just the order of parameters.
+SMART_ACTION_CAST(*spell=71306) // Twisted Winds
+SMART_TARGET_CLOSEST_FRIENDLY(*yards=50000)
+
+//eventId=4
+FLAGS(28)
+SMART_EVENT_DEATH()
+SMART_ACTION_CAST(71203) // Soul Feast
+SMART_TARGET_PLAYER_DISTANCE(*distance=50000)

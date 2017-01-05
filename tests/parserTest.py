@@ -51,7 +51,7 @@ class TestParser(unittest.TestCase):
             SMART_EVENT_UPDATE_OOC(1000,8000,8000,10000)
             SMART_ACTION_CAST(71270)
             SMART_TARGET_SELF()
-
+            
             PHASE(0)
             CHANCE(100)
             SMART_EVENT_AGGRO()
