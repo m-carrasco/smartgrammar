@@ -3,34 +3,20 @@ Smart Grammar is an expressive way to write smart scripts for the TrinityCore em
 
 ## Example
 ```
-CREATURE SCRIPT: ENTRY=11897 
-AT SMART_EVENT_UPDATE_IC 
-  eventId=0 
-  initialMin=5000 
-  *initialMax=8000 
-  *repeatMin=12000 
-  *repeatMax=15000 
-DO SMART_ACTION_CAST 
-  *spellId=77522 
-ON SMART_TARGET_VICTIM 
-AT SMART_EVENT_RANGE 
-  eventId=1 
-  *minDist=0 
-  *maxDist=8 
-  *repeatMin=15000 
-  *repeatMax=25000 
-DO SMART_ACTION_CAST 
-  param1=8281 
-ON SMART_TARGET_SELF
+TYPE CREATURE ENTRY 37127 // Ymirjar Frostbinder
+PHASE(0)
+CHANCE(100)
+FLAGS(30) // normal dungeon, heroic dungeon, normal raid, heroic raid
+SMART_EVENT_UPDATE_IC(*initialMin=1000, *initialMax=8000, *repeatMin=8000, *repeatMax=10000) 
+SMART_ACTION_CAST(*spellId=71270) // Arctic Chill
+SMART_TARGET_SELF()
+
 ```
 
 The parser will generate the equivalent SQL:
 ```
 INSERT INTO smart_scripts (entryorguid, source_type, id, link, event_type, event_phase_mask, event_chance, event_flags, event_param1, event_param2, event_param3, event_param4, action_type, action_param1, action_param2, action_param3, action_param4, action_param5,  action_param6, target_type, target_param1, target_param2, target_param3, target_x, target_y, target_z, target_o, comment)
-VALUES (11897, 0, 0, 0, 0, 0, 100, 0, 5000,8000,12000, 15000, 11, 77522, 0, 0, 0, 0,0, 2, 0, 0, 0, 0, 0, 0, 0, '');
-
-INSERT INTO smart_scripts (entryorguid, source_type, id, link, event_type, event_phase_mask, event_chance, event_flags, event_param1, event_param2, event_param3, event_param4, action_type, action_param1, action_param2, action_param3, action_param4, action_param5,  action_param6, target_type, target_param1, target_param2, target_param3, target_x, target_y, target_z, target_o, comment)
-VALUES (11897, 0, 1, 0, 9, 0, 100, 0, 0,8,15000, 25000, 11, 8281, 0, 0, 0, 0,0, 1, 0, 0, 0, 0, 0, 0, 0, '');
+VALUES (37127, 0, 0, 0, 0, 0, 100, 30, 1000,8000,8000, 10000, 11, 71270, 0, 0, 0, 0,0, 1, 0, 0, 0, 0, 0, 0, 0, '');
 ```
 
 The smartgrammar code is easier to understand than the SQL sentences.
@@ -39,123 +25,85 @@ The smartgrammar code is easier to understand than the SQL sentences.
 
 ### Header
 
-Every script must start with: ```SOURCE_TYPE SCRIPT: ENTRYORGUID=ENTRY_NUMBER``` where:
+Every script must start with: ```TYPE SOURCE_TYPE ENTRYORGUID NUMBER ``` where:
 - SOURCE_TYPE is any of the following strings: CREATURE, GAMEOBJECT, AREATRIGGER, EVENT, GOSSIP, QUEST, SPELL, TRANSPORT, INSTANCE, TIMED_ACTIONLIST
 - ENTRYORGUID is the string ENTRY or GUID.
-- ENTRY_NUMBER is the source entry or guid (both as positive integers).
+- NUMBER is the source entry or guid (both as positive integers).
 
-Then the script requires the specification of event, action and target parameters. 
+Then the script requires the specification of event, action and target parameters (in that order).
 
 ### Event
 
-First you must declare the event type by writing: ```AT SMART_EVENT_XX``` where SMART_EVENT_XX is one of the labels defined in the TrinityCore wiki.
+Before specifying the event type you can define the following event attributes:
 
-Then you must write the parameters. This is the list of the common parameters between smart events:
+- Link (default: 0)
+- Phase (default: 0)
+- Flags (default: 0)
+- Chance (default: 100)
 
-- eventId
-- eventPhase
-- eventChance
-- eventFlags
-- eventLink
+You must use the following keywords (see first example):
 
-If they are not set in the smartgrammar code the default value will be 0. For eventFlags you can use the labels defined in the TrinityCore wiki and add them together. For instance eventFlags= FLAG_1 | FLAG_5 where FLAG_1 and FLAG_5 are labels defined in the wiki.
+- LINK
+- PHASE
+- FLAGS
+- CHANCE
 
-As you can see in the first example of this documentation just eventId is set but you can set the rest if needed.
+The order between this attributes doesn't matter. It is mandatory that they are before the event type.
 
-Then it's time for the parameters of the event type you choose. If it is SMART_EVENT_UPDATE_IC you should set the timers or if it is SMART_EVENT_ACCEPTED_QUEST you must specify a questId. Check the TrinityCore wiki in order to know how many paramters your event type requires.
+Then you must set the event type. Currently the event's are named in the same way as in the TC source. For example: SMART_EVENT_UPDATE_OOC
 
-You have two options here.
-
-Firstly you can use the default parameters name: param1, param2, param3 and param4.
-
-For instance SMART_EVENT_ACCEPTED_QUEST just use one parameter so you should only use param1:
+In order to set the parameters of the event you must do the following:
 
 ```
-param1=12512
+SMART_EVENT_TYPE(NUMBER, ..., NUMBER)
 ```
+The parameter list can have up to 4 numbers. Any parameter that's not set will have value 0 as default.
 
-Secondly you can define your own parameter names using the character * (asterisk).
-
-```
-*questId=12512
-```
-
-```
-*whatever=12512
-```
-Notice that if you use custom parameter names you must not use the default parameters names for the rest of the event configuration.
-
-If event type parameters are not set the default value will be 0.
-
+An alternative is to use custom parameters names. Read the custom parameters section or see the first example (above).
 ### Action
 
-First you must declare the action type by writing: ```DO SMART_ACTION_XX``` where SMART_ACTION_XX is one of the labels defined in the TrinityCore wiki.
-
-Then it's time for the parameters of the action type you choose. If it is SMART_ACTION_SET_FACTION you should set the factionId or if it is SMART_ACTION_CAST you must specify a spellId, castFlags and trigger options. Check the TrinityCore wiki in order to know how many paramters your event type requires.
-
-You have two options here.
-
-Firstly you can use the default parameters name: param1, param2, param3, param4, param5 and param6
-
-For instance SMART_ACTION_SET_FACTION just use one parameter so you should only use param1:
-
-```param1=20
-```
-
-Secondly you can define your own parameter names using the character * (asterisk).
+The action is set using the TC naming for actions. It is done like this:
 
 ```
-*factionId=12512
+SMART_ACTION_TYPE(NUMBER, ..., NUMBER)
 ```
+The parameter list can have up to 6 numbers. Any parameter that's not set will have value 0 as default.
 
-```
-*whatever=12512
-```
-
-Notice that if you use custom parameter names you must not use the default parameters names for the rest of the action configuration.
-
-If action type parameters are not set the default value will be 0.
+An alternative is to use custom parameters names. Read the custom parameters section or see the first example (above).
 
 ### Target
 
-First you must declare the target type by writing: ```DO SMART_TARGET_XX``` where SMART_TARGET_XX is one of the labels defined in the TrinityCore wiki.
+Target type follows the same convention as the TC source code. The parameters are set like this:
 
-Then it's time for the parameters of the target type you choose. If it is SMART_TARGET_SELF you don't need any parameter or if it is SMART_TARGET_CLOSEST_FRIENDLY you must specify a distance and if it is a player. Check the TrinityCore wiki in order to know how many paramters your event type requires.
+```
+SMART_TARGET_TYPE(NUMBER, ..., NUMBER)
+```
 
-You have two options here.
+The first 3 numbers are for param1, param2, param3 (described in the tc wiki).
+The latters are for paramX, paramY, paramZ, paramO.
 
-Firstly you can use the default parameters name: param1, param2, param3
-Secondly you can define your own parameter names using the character * (asterisk).
+If you only want to set the value of paramX, ..., param0 you must set the default values for param1,param2,param3.
 
-Notice that if you use custom parameter names you must not use the default parameters names for the rest of the target configuration.
+Example: You just want to set paramX
 
-Also keep in mind that parameters paramX, paramY, paramZ and paramO are not customizable. You must use these names.
-If action type parameters are not set the default value will be 0.
+```
+SMART_TARGET_TYPE(0,0,0,15.5)
+```
+
+An alternative is to use custom parameters names. Read the custom parameters section or see the first example (above).
 
 ### Custom parameter names
 
 Custom parameter names can be defined as you wish but the order is important. 
 
-For instance:
+For instance (they can be used for ACTION and TARGET types):
 
 ```
-*customName2=12512
-*abcdefgh=156
+SMART_EVENT_TYPE(*dsagfas=12512, *param4=51)
 ```
-The parser will consider 12512 the value for param1 and 156 for param2. The rest of the parameters will have value 0.
-
-Also keep in mind that if you use the default parameter names you can switch the order
-
-```
-param4=12512
-param3=156
-```
-param4 will have value 12512 and param3 will have value 156. The rest of the parameters will have value 0.
+The parser will consider 12512 the value for param1 and 51 for param2. The rest of the parameters will have value 0.
 
 ## Instructions
 
 1. Write your smartgrammar script in a file
 2. In the root directory of the repository from the console execute main.py specifying the file name. ie: python3 main.py input.in
-
-
-
